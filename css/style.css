@@ -282,6 +282,9 @@ body {
 .mobile-title {
   font-size: 1.1rem;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .mobile-title i {
@@ -1044,12 +1047,16 @@ body {
   }
 
   .tracklist-header {
-    grid-template-columns: 32px 1fr 60px 40px;
+    grid-template-columns: 32px 1fr 50px 70px;
   }
 
   .track-row {
-    grid-template-columns: 32px 1fr 60px 40px;
+    grid-template-columns: 32px 1fr 50px 70px;
     padding: 8px 8px;
+  }
+
+  .track-share-btn {
+    opacity: 1;
   }
 }
 

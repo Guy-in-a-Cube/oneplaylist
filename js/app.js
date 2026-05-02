@@ -77,6 +77,7 @@ const App = (() => {
 
     container.innerHTML = `
       <div class="view-header">
+        <h2 class="hero-text">All the anthems, unified in OnePlaylist.</h2>
         <p>${library.albums.length} album${library.albums.length !== 1 ? 's' : ''}, ${getTotalTracks()} tracks</p>
       </div>
       <div class="album-grid">
