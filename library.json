@@ -1,0 +1,208 @@
+{
+  "artist": "P. LeBlanc",
+  "albums": [
+    {
+      "id": "2025-onelake-drive",
+      "title": "2025 OneLake Drive",
+      "slug": "2025-onelake-drive",
+      "year": 2025,
+      "cover": "media/2025-onelake-drive/cover.jpg",
+      "tracks": [
+        {
+          "id": "2025-onelake-drive-track-1",
+          "title": "Fabricate",
+          "trackNumber": 1,
+          "duration": "1:44",
+          "file": "media/2025-onelake-drive/Fabricate.mp3"
+        },
+        {
+          "id": "2025-onelake-drive-track-2",
+          "title": "Touch the Cloud",
+          "trackNumber": 2,
+          "duration": "3:11",
+          "file": "media/2025-onelake-drive/Touch the Cloud.mp3"
+        },
+        {
+          "id": "2025-onelake-drive-track-3",
+          "title": "I Wish",
+          "trackNumber": 3,
+          "duration": "2:19",
+          "file": "media/2025-onelake-drive/I Wish.mp3"
+        },
+        {
+          "id": "2025-onelake-drive-track-4",
+          "title": "99 Problems",
+          "trackNumber": 4,
+          "duration": "2:47",
+          "file": "media/2025-onelake-drive/99 Problems.mp3"
+        }
+      ]
+    },
+    {
+      "id": "2025-onelake-drive-b-sides",
+      "title": "2025 OneLake Drive (B-Sides)",
+      "slug": "2025-onelake-drive-b-sides",
+      "year": 2025,
+      "cover": "media/2025-onelake-drive-b-sides/cover.png",
+      "tracks": [
+        {
+          "id": "2025-onelake-drive-b-sides-track-1",
+          "title": "No Modelz",
+          "trackNumber": 1,
+          "duration": "3:25",
+          "file": "media/2025-onelake-drive-b-sides/No Modelz.mp3"
+        },
+        {
+          "id": "2025-onelake-drive-b-sides-track-2",
+          "title": "I'm Sorry (Legacy)",
+          "trackNumber": 2,
+          "duration": "2:27",
+          "file": "media/2025-onelake-drive-b-sides/I'm Sorry (Legacy).mp3"
+        }
+      ]
+    },
+    {
+      "id": "403s-&-linebreaks",
+      "title": "403s & Linebreaks",
+      "slug": "403s-&-linebreaks",
+      "year": 2025,
+      "cover": "media/403s-&-linebreaks/cover.jpg",
+      "tracks": [
+        {
+          "id": "403s-&-linebreaks-track-1",
+          "title": "No More Tiers",
+          "trackNumber": 1,
+          "duration": "2:02",
+          "file": "media/403s-&-linebreaks/No More Tiers.mp3"
+        },
+        {
+          "id": "403s-&-linebreaks-track-2",
+          "title": "Stronger",
+          "trackNumber": 2,
+          "duration": "3:25",
+          "file": "media/403s-&-linebreaks/Stronger.mp3"
+        },
+        {
+          "id": "403s-&-linebreaks-track-3",
+          "title": "Not Like Us",
+          "trackNumber": 3,
+          "duration": "3:13",
+          "file": "media/403s-&-linebreaks/Not Like Us.mp3"
+        },
+        {
+          "id": "403s-&-linebreaks-track-4",
+          "title": "Code Crimes",
+          "trackNumber": 4,
+          "duration": "2:44",
+          "file": "media/403s-&-linebreaks/Code Crimes.mp3"
+        }
+      ]
+    },
+    {
+      "id": "ideas",
+      "title": "Ideas",
+      "slug": "ideas",
+      "year": 2025,
+      "cover": "media/ideas/cover.jpg",
+      "tracks": [
+        {
+          "id": "ideas-track-1",
+          "title": "DAX Me Maybe",
+          "trackNumber": 1,
+          "duration": "2:37",
+          "file": "media/ideas/DAX Me Maybe.mp3"
+        },
+        {
+          "id": "ideas-track-2",
+          "title": "Clicky, Clicky, Draggy, Droppy",
+          "trackNumber": 2,
+          "duration": "1:46",
+          "file": "media/ideas/Clicky, Clicky, Draggy, Droppy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "lake-into-a-lighthouse",
+      "title": "Lake into a Lighthouse",
+      "slug": "lake-into-a-lighthouse",
+      "year": 2026,
+      "cover": "media/lake-into-a-lighthouse/cover.jpg",
+      "tracks": [
+        {
+          "id": "lake-into-a-lighthouse-track-1",
+          "title": "Lake Into a Lighthouse",
+          "trackNumber": 1,
+          "duration": "3:18",
+          "file": "media/lake-into-a-lighthouse/Lake Into a Lighthouse.mp3"
+        },
+        {
+          "id": "lake-into-a-lighthouse-track-2",
+          "title": "Direct Lake (Goin' Wild)",
+          "trackNumber": 2,
+          "duration": "1:59",
+          "file": "media/lake-into-a-lighthouse/Direct Lake (Goin' Wild).mp3"
+        },
+        {
+          "id": "lake-into-a-lighthouse-track-3",
+          "title": "Catch Me in Real-Time",
+          "trackNumber": 3,
+          "duration": "2:32",
+          "file": "media/lake-into-a-lighthouse/Catch Me in Real-Time.mp3"
+        }
+      ]
+    },
+    {
+      "id": "select-star-from-atl2026-mixtape",
+      "title": "SELECT STAR FROM ATL2026 - Mixtape",
+      "slug": "select-star-from-atl2026-mixtape",
+      "year": 2026,
+      "cover": "media/select-star-from-atl2026-mixtape/cover.png",
+      "tracks": [
+        {
+          "id": "select-star-from-atl2026-mixtape-track-1",
+          "title": "Fabric-ulations",
+          "trackNumber": 1,
+          "duration": "2:47",
+          "file": "media/select-star-from-atl2026-mixtape/Fabric-ulations.mp3"
+        },
+        {
+          "id": "select-star-from-atl2026-mixtape-track-2",
+          "title": "High IQ",
+          "trackNumber": 2,
+          "duration": "3:08",
+          "file": "media/select-star-from-atl2026-mixtape/High IQ.mp3"
+        }
+      ]
+    },
+    {
+      "id": "sql-server-2025",
+      "title": "SQL Server 2025",
+      "slug": "sql-server-2025",
+      "year": 2025,
+      "cover": "media/sql-server-2025/cover.jpg",
+      "tracks": [
+        {
+          "id": "sql-server-2025-track-1",
+          "title": "Old SQL Code",
+          "trackNumber": 1,
+          "duration": "3:00",
+          "file": "media/sql-server-2025/Old SQL Code.mp3"
+        },
+        {
+          "id": "sql-server-2025-track-2",
+          "title": "Started On Prem",
+          "trackNumber": 2,
+          "duration": "2:02",
+          "file": "media/sql-server-2025/Started On Prem.mp3"
+        },
+        {
+          "id": "sql-server-2025-track-3",
+          "title": "RU Kiddin",
+          "trackNumber": 3,
+          "duration": "2:51",
+          "file": "media/sql-server-2025/RU Kiddin.mp3"
+        }
+      ]
+    }
+  ]
+}

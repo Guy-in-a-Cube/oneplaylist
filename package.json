@@ -1,0 +1,13 @@
+{
+  "name": "oneplaylist",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static music player for GitHub Pages",
+  "scripts": {
+    "build": "node scripts/build-library.js",
+    "dev": "npx serve . -l 3000"
+  },
+  "devDependencies": {
+    "music-metadata": "^11.12.3"
+  }
+}
