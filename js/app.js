@@ -224,9 +224,9 @@ const App = (() => {
           <br>
           <p>Created by Guy in a Cube</p>
           <div class="about-links">
-            <a href="https://www.guyinacube.com" target="_blank" rel="noopener" title="Guy in a Cube"><span class="giac-cube-icon" aria-hidden="true"></span></a>
-            <a href="https://www.linkedin.com/company/guyinacube" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="https://youtube.com/c/guyinacube" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.linkedin.com/company/guyinacube" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://twitter.com/guyinacube" target="_blank" rel="noopener" title="Twitter"><i class="fab fa-twitter"></i></a>
           </div>
         </div>
       </div>`;
