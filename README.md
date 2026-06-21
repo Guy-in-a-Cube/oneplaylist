@@ -2,7 +2,7 @@
 
 A static music player hosted on GitHub Pages. Dark theme, album grid, full playback controls, downloads.
 
-**Live:** https://alexmpowers.github.io/oneplaylist/
+**Live:** https://music.guyinacube.com/
 
 ## Features
 
