@@ -1152,8 +1152,9 @@ body {
 }
 
 .giac-cube-icon {
-  width: 1.4rem;
-  height: 1.4rem;
+  display: block;
+  width: 1.9rem;
+  height: 1.9rem;
   background-color: currentColor;
   -webkit-mask: url('../img/giac-cube.svg') no-repeat center / contain;
   mask: url('../img/giac-cube.svg') no-repeat center / contain;
