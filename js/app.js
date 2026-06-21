@@ -221,8 +221,8 @@ const App = (() => {
         <div class="about-bio">
           <p>OnePlaylist is what happens when you turn documentation and technical concepts into songs that teach technology through clever lyrics and choruses.</p>
           <p>Each song probably could have been a slide deck, but we think a catchy hook works better instead.</p>
-          <br>
-          <p>Created by Guy in a Cube</p>
+          <hr>
+          <p>Follow Guy in a Cube online:</p>
           <div class="about-links">
             <a href="https://youtube.com/c/guyinacube" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
             <a href="https://www.linkedin.com/company/guyinacube" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>

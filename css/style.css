@@ -78,6 +78,11 @@ body {
   min-width: 0;
 }
 
+.menu-toggle {
+  display: none;
+  color: var(--text-secondary);
+}
+
 .topbar-logo {
   display: flex;
   align-items: center;
@@ -864,6 +869,11 @@ body {
 }
 
 /* Play/pause button state */
+#btn-play-pause .fa-play {
+  /* Optically center the play triangle within the circular button */
+  transform: translateX(1px);
+}
+
 #btn-play-pause .fa-pause {
   display: none;
 }
@@ -1087,6 +1097,15 @@ body {
   #app {
     grid-template-columns: 1fr;
     grid-template-rows: var(--topbar-height) 1fr var(--player-height);
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* Collapse-to-rail is desktop-only; on mobile the hamburger is the single menu control */
+  #sidebar-collapse-btn {
+    display: none;
   }
 
   #sidebar {
