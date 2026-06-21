@@ -15,10 +15,10 @@
   --text-secondary: #5b6470;
   --text-subdued: #8b94a0;
   --border: #e3e6ea;
-  --player-height: 90px;
-  --topbar-height: 64px;
-  --sidebar-width: 240px;
-  --mobile-header-height: 56px;
+  --player-height: 100px;
+  --topbar-height: 72px;
+  --sidebar-width: 260px;
+  --mobile-header-height: 62px;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -35,6 +35,10 @@
 html, body {
   height: 100%;
   overflow: hidden;
+}
+
+html {
+  font-size: 112.5%; /* 18px base — scales all rem-based text for readability at 100% */
 }
 
 body {
@@ -788,8 +792,8 @@ body {
 }
 
 .player-art {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: var(--radius-sm);
   object-fit: cover;
   background: var(--bg-elevated);
