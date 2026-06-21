@@ -17,12 +17,26 @@
 </head>
 <body>
   <div id="app">
+    <!-- Top bar -->
+    <header id="topbar">
+      <div class="topbar-left">
+        <a href="https://www.guyinacube.com" target="_blank" rel="noopener" class="topbar-logo" title="Guy in a Cube">
+          <img src="img/oneplaylist.svg" alt="">
+        </a>
+        <a href="#/" class="topbar-brand" aria-label="OnePlaylist home">
+          <img src="img/logo-giac-icon.png" alt="Guy in a Cube" class="topbar-wordmark">
+        </a>
+      </div>
+      <nav class="topbar-nav">
+        <a href="#/about" class="topbar-link topbar-icon-link" data-view="about" title="About" aria-label="About">
+          <i class="fas fa-circle-info"></i>
+        </a>
+      </nav>
+    </header>
+
     <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-logo">
-          <h1><a href="https://www.guyinacube.com" target="_blank" rel="noopener" title="Guy in a Cube"><img src="img/oneplaylist.svg" alt="OnePlaylist" class="sidebar-logo-img"></a> <span class="sidebar-label">OnePlaylist</span></h1>
-        </div>
         <button id="sidebar-collapse-btn" class="btn-icon" title="Collapse sidebar">
           <i class="fas fa-chevron-left"></i>
         </button>
@@ -39,20 +53,9 @@
         <button id="download-all-btn" class="btn-download-all-sidebar">
           <i class="fas fa-download"></i> <span class="sidebar-label">Download All</span>
         </button>
-        <a href="#/about" class="nav-link" data-view="about">
-          <i class="fas fa-user"></i> <span class="sidebar-label">About</span>
-        </a>
       </div>
       <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </aside>
-
-    <!-- Mobile header -->
-    <header id="mobile-header">
-      <button id="menu-toggle" class="btn-icon" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      <h1 class="mobile-title"><img src="img/oneplaylist.svg" alt="OnePlaylist" class="sidebar-logo-img"> OnePlaylist</h1>
-    </header>
 
     <!-- Main content area -->
     <main id="main-content">

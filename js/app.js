@@ -55,7 +55,7 @@ const App = (() => {
     }
 
     // Update active nav link
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link, .topbar-link').forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('href') === hash ||
           (hash === '#/' && link.getAttribute('data-view') === 'home') ||
