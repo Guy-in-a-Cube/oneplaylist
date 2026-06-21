@@ -9,8 +9,8 @@
   --bg-highlight: #2a2a2a;
   --bg-card: #181818;
   --bg-card-hover: #282828;
-  --accent: #1DB954;
-  --accent-hover: #1ed760;
+  --accent: #017aeb;
+  --accent-hover: #2a93f5;
   --text-primary: #ffffff;
   --text-secondary: #b3b3b3;
   --text-subdued: #6a6a6a;
@@ -166,7 +166,7 @@ body {
   border: none;
   border-radius: 24px;
   background: var(--accent);
-  color: #000;
+  color: #fff;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -1149,6 +1149,14 @@ body {
 
 .about-links a:hover {
   color: var(--accent);
+}
+
+.giac-cube-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  background-color: currentColor;
+  -webkit-mask: url('../img/giac-cube.svg') no-repeat center / contain;
+  mask: url('../img/giac-cube.svg') no-repeat center / contain;
 }
 
 /* ============================================

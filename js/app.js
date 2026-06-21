@@ -220,15 +220,13 @@ const App = (() => {
       <div class="about-section">
         <div class="about-bio">
           <p>OnePlaylist is what happens when you turn documentation and technical concepts into songs that teach technology through clever lyrics and choruses.</p>
-          <p>Each song probably could have been a slide deck, but the Azure Data platform and developer tools deserved a catchy hook instead.</p>
+          <p>Each song probably could have been a slide deck, but we think a catchy hook works better instead.</p>
           <br>
-          <p>Created by Alex Powers — a Program Manager at Microsoft obsessed with community and developer experiences.</p>
+          <p>Created by Guy in a Cube</p>
           <div class="about-links">
-            <a href="https://github.com/alexmpowers" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://reddit.com/u/itsnotaboutthecell" target="_blank" rel="noopener" title="Reddit"><i class="fab fa-reddit"></i></a>
-            <a href="https://bsky.app/profile/itsnotaboutthecell.com" target="_blank" rel="noopener" title="Bluesky"><i class="fab fa-bluesky"></i></a>
-            <a href="https://linkedin.com/in/alexmpowers" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="https://youtube.com/c/itsnotaboutthecell" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.guyinacube.com" target="_blank" rel="noopener" title="Guy in a Cube"><span class="giac-cube-icon" aria-hidden="true"></span></a>
+            <a href="https://www.linkedin.com/company/guyinacube" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://youtube.com/c/guyinacube" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
       </div>`;

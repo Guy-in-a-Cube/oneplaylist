@@ -13,6 +13,14 @@ const Player = (() => {
   let allSongs = [];
   let currentAlbumSlug = null;
 
+  // Queue model: we drive next/prev ourselves instead of relying on
+  // Amplitude's global navigation, so playback stays within the chosen context.
+  let queue = [];          // global indices (into allSongs) in play order
+  let queuePos = -1;       // pointer into `queue`
+  let baseOrder = [];      // queue order before shuffle (for un-shuffling)
+  let queueContext = null; // { type: 'album', slug } | { type: 'all' }
+  let isScrubbing = false; // true while user drags the progress bar
+
   // Build the master song list from library
   function buildSongList(library) {
     const songs = [];
@@ -42,10 +50,12 @@ const Player = (() => {
     Amplitude.init({
       songs: allSongs,
       volume: 80,
+      continue_next: false,
       callbacks: {
         song_change: onSongChange,
         play: onPlay,
         pause: onPause,
+        ended: onEnded,
         timeupdate: onTimeUpdate
       }
     });
@@ -70,8 +80,89 @@ const Player = (() => {
     return indices;
   }
 
+  // Fisher-Yates shuffle of a copy
+  function shuffledCopy(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Establish a new playback queue and start playing `startGlobalIndex`.
+  function setQueue(indices, startGlobalIndex, context) {
+    baseOrder = indices.slice();
+    queueContext = context;
+
+    if (shuffleOn) {
+      queue = shuffledCopy(baseOrder);
+      // Move the chosen song to the front so playback starts there.
+      const at = queue.indexOf(startGlobalIndex);
+      if (at > 0) {
+        queue.splice(at, 1);
+        queue.unshift(startGlobalIndex);
+      }
+      queuePos = 0;
+    } else {
+      queue = baseOrder.slice();
+      queuePos = queue.indexOf(startGlobalIndex);
+      if (queuePos === -1) queuePos = 0;
+    }
+
+    playCurrent();
+  }
+
+  // Play whatever song the queue pointer currently references.
+  function playCurrent() {
+    if (queuePos < 0 || queuePos >= queue.length) return;
+    showPlayerBar();
+    Amplitude.playSongAtIndex(queue[queuePos]);
+    updatePlayerUI();
+  }
+
+  // Advance to the next song, honoring repeat mode and queue boundaries.
+  function next() {
+    if (!isInitialized || queue.length === 0) return;
+
+    if (repeatMode === 2) { // repeat one
+      playCurrent();
+      return;
+    }
+
+    if (queuePos < queue.length - 1) {
+      queuePos++;
+    } else if (repeatMode === 1) { // repeat all -> wrap to start
+      queuePos = 0;
+    } else {
+      return; // end of queue, stop
+    }
+
+    playCurrent();
+  }
+
+  // Go to the previous song. Restart the current track if we're past 3s in.
+  function prev() {
+    if (!isInitialized || queue.length === 0) return;
+
+    if (repeatMode !== 2 && Amplitude.getSongPlayedSeconds() <= 3) {
+      if (queuePos > 0) {
+        queuePos--;
+      } else if (repeatMode === 1) {
+        queuePos = queue.length - 1;
+      }
+    }
+
+    playCurrent();
+  }
+
+  // Natural end of a track (Amplitude's continue_next is disabled).
+  function onEnded() {
+    next();
+  }
+
   // Play a specific album, optionally starting at a track index within the album
-  function playAlbum(slug, shuffle = false, albumTrackIndex = 0) {
+  function playAlbum(slug, shuffle = false, albumTrackIndex = null) {
     if (!isInitialized) return;
 
     const albumIndices = getAlbumIndices(slug);
@@ -79,33 +170,33 @@ const Player = (() => {
 
     currentAlbumSlug = slug;
 
-    // Calculate the global song index
-    const globalIndex = albumIndices[albumTrackIndex] ?? albumIndices[0];
+    const inThisAlbum =
+      queueContext && queueContext.type === 'album' && queueContext.slug === slug;
 
-    // Check if this exact song is already the active one
-    const activeIndex = Amplitude.getActiveIndex();
-
-    if (activeIndex === globalIndex) {
-      // Same track — toggle play/pause
-      if (Amplitude.getPlayerState() === 'playing') {
-        Amplitude.pause();
-      } else {
-        Amplitude.play();
+    // Album-level play button (no specific track requested)
+    if (albumTrackIndex === null) {
+      if (inThisAlbum && Amplitude.getActiveSongMetadata()) {
+        // Already playing this album -> toggle play/pause
+        togglePlayPause();
+        return;
       }
-      return;
+      albumTrackIndex = 0;
+    } else {
+      // A specific track was clicked -> toggle if it's already the active song
+      const gi = albumIndices[albumTrackIndex];
+      if (inThisAlbum && Amplitude.getActiveIndex() === gi) {
+        togglePlayPause();
+        return;
+      }
     }
 
-    // Handle shuffle
     if (shuffle) {
       shuffleOn = true;
-      Amplitude.setShuffle(true);
       updateShuffleUI();
     }
 
-    // Play the song at the global index
-    showPlayerBar();
-    Amplitude.playSongAtIndex(globalIndex);
-    updatePlayerUI();
+    const startGlobalIndex = albumIndices[albumTrackIndex] ?? albumIndices[0];
+    setQueue(albumIndices, startGlobalIndex, { type: 'album', slug });
   }
 
   // Play a specific track by ID
@@ -115,21 +206,15 @@ const Player = (() => {
     const globalIndex = findSongIndex(trackId);
     if (globalIndex === -1) return;
 
-    const activeIndex = Amplitude.getActiveIndex();
-
-    if (activeIndex === globalIndex) {
-      // Same track — toggle play/pause
-      if (Amplitude.getPlayerState() === 'playing') {
-        Amplitude.pause();
-      } else {
-        Amplitude.play();
-      }
+    if (Amplitude.getActiveIndex() === globalIndex) {
+      // Same track -- toggle play/pause
+      togglePlayPause();
       return;
     }
 
-    showPlayerBar();
-    Amplitude.playSongAtIndex(globalIndex);
-    updatePlayerUI();
+    // Clicking a track in a full-library list plays within that library context.
+    const allIndices = allSongs.map((_, i) => i);
+    setQueue(allIndices, globalIndex, { type: 'all' });
   }
 
   // Shuffle all tracks
@@ -138,14 +223,10 @@ const Player = (() => {
 
     currentAlbumSlug = null;
     shuffleOn = true;
-    Amplitude.setShuffle(true);
     updateShuffleUI();
-    showPlayerBar();
 
-    // Play a random track
-    const randomIndex = Math.floor(Math.random() * allSongs.length);
-    Amplitude.playSongAtIndex(randomIndex);
-    updatePlayerUI();
+    const allIndices = allSongs.map((_, i) => i);
+    setQueue(allIndices, allIndices[0], { type: 'all' });
     App.showToast('Shuffling all tracks');
   }
 
@@ -191,10 +272,10 @@ const Player = (() => {
 
     // Prev/Next
     document.getElementById('btn-prev')?.addEventListener('click', () => {
-      if (isInitialized) Amplitude.prev();
+      if (isInitialized) prev();
     });
     document.getElementById('btn-next')?.addEventListener('click', () => {
-      if (isInitialized) Amplitude.next();
+      if (isInitialized) next();
     });
 
     // Download current track
@@ -212,6 +293,16 @@ const Player = (() => {
         window.location.hash = `#/album/${song._albumSlug}`;
       }
     });
+
+    // Keep the mute icon in sync when the volume slider is dragged
+    document.querySelector('.volume-slider')?.addEventListener('input', (e) => {
+      const volBtn = document.getElementById('btn-volume');
+      if (!volBtn) return;
+      const v = parseInt(e.target.value);
+      volBtn.innerHTML = v === 0
+        ? '<i class="fas fa-volume-mute"></i>'
+        : '<i class="fas fa-volume-up"></i>';
+    });
   }
 
   // Progress bar binding
@@ -222,7 +313,11 @@ const Player = (() => {
       progressBar.value = 0;
 
       progressBar.addEventListener('input', () => {
+        isScrubbing = true;
+      });
+      progressBar.addEventListener('change', () => {
         Amplitude.setSongPlayedPercentage(parseFloat(progressBar.value));
+        isScrubbing = false;
       });
     }
   }
@@ -232,7 +327,7 @@ const Player = (() => {
     if (!isInitialized) return;
 
     const bar = document.querySelector('.progress-bar');
-    if (bar) {
+    if (bar && !isScrubbing) {
       const pct = Amplitude.getSongPlayedPercentage();
       if (!isNaN(pct)) bar.value = pct;
     }
@@ -271,11 +366,11 @@ const Player = (() => {
           break;
         case 'ArrowRight':
           e.preventDefault();
-          if (isInitialized) Amplitude.next();
+          if (isInitialized) next();
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          if (isInitialized) Amplitude.prev();
+          if (isInitialized) prev();
           break;
         case 'KeyS':
           if (!e.ctrlKey && !e.metaKey) toggleShuffle();
@@ -291,7 +386,25 @@ const Player = (() => {
   function toggleShuffle() {
     if (!isInitialized) return;
     shuffleOn = !shuffleOn;
-    Amplitude.setShuffle(shuffleOn);
+
+    // Re-order the existing queue around the currently playing song.
+    if (queue.length > 0 && queuePos >= 0) {
+      const currentGlobalIndex = queue[queuePos];
+      if (shuffleOn) {
+        queue = shuffledCopy(baseOrder);
+        const at = queue.indexOf(currentGlobalIndex);
+        if (at > 0) {
+          queue.splice(at, 1);
+          queue.unshift(currentGlobalIndex);
+        }
+        queuePos = 0;
+      } else {
+        queue = baseOrder.slice();
+        queuePos = queue.indexOf(currentGlobalIndex);
+        if (queuePos === -1) queuePos = 0;
+      }
+    }
+
     updateShuffleUI();
     App.showToast(shuffleOn ? 'Shuffle on' : 'Shuffle off');
   }
@@ -309,21 +422,15 @@ const Player = (() => {
 
     switch (repeatMode) {
       case 0:
-        Amplitude.setRepeat(false);
-        Amplitude.setRepeatSong(false);
         btn?.classList.remove('active', 'repeat-one');
         App.showToast('Repeat off');
         break;
       case 1:
-        Amplitude.setRepeat(true);
-        Amplitude.setRepeatSong(false);
         btn?.classList.add('active');
         btn?.classList.remove('repeat-one');
         App.showToast('Repeat all');
         break;
       case 2:
-        Amplitude.setRepeat(false);
-        Amplitude.setRepeatSong(true);
         btn?.classList.add('active', 'repeat-one');
         App.showToast('Repeat one');
         break;
@@ -359,10 +466,12 @@ const Player = (() => {
     showPlayerBar();
     updatePlayerUI();
     updateMediaSession();
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
   }
 
   function onPause() {
     updatePlayerUI();
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
   }
 
   // Update player bar UI
@@ -409,8 +518,8 @@ const Player = (() => {
 
     navigator.mediaSession.setActionHandler('play', () => Amplitude.play());
     navigator.mediaSession.setActionHandler('pause', () => Amplitude.pause());
-    navigator.mediaSession.setActionHandler('previoustrack', () => Amplitude.prev());
-    navigator.mediaSession.setActionHandler('nexttrack', () => Amplitude.next());
+    navigator.mediaSession.setActionHandler('previoustrack', () => prev());
+    navigator.mediaSession.setActionHandler('nexttrack', () => next());
   }
 
   // Show player bar
