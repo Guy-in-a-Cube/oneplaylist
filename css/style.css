@@ -140,7 +140,25 @@ body {
 
 .nav-link.active {
   color: var(--text-primary);
-  background: var(--bg-elevated);
+  background: var(--bg-highlight);
+  font-weight: 600;
+  position: relative;
+}
+
+.nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+
+.nav-link.active i {
+  color: var(--accent);
 }
 
 .nav-link i {
@@ -1153,8 +1171,8 @@ body {
 
 .giac-cube-icon {
   display: block;
-  width: 1.9rem;
-  height: 1.9rem;
+  height: 1.55rem;
+  width: calc(1.55rem * 129.19 / 89); /* preserve cropped cube aspect ratio */
   background-color: currentColor;
   -webkit-mask: url('../img/giac-cube.svg') no-repeat center / contain;
   mask: url('../img/giac-cube.svg') no-repeat center / contain;
