@@ -78,7 +78,7 @@ body {
   min-width: 0;
 }
 
-.menu-toggle {
+.btn-icon.menu-toggle {
   display: none;
   color: var(--text-secondary);
 }
@@ -240,26 +240,19 @@ body {
 }
 
 .nav-link.active {
-  color: var(--text-primary);
-  background: var(--bg-highlight);
+  color: #fff;
+  background: var(--accent);
   font-weight: 600;
   position: relative;
 }
 
-.nav-link.active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  border-radius: 0 3px 3px 0;
-  background: var(--accent);
+.nav-link.active:hover {
+  color: #fff;
+  background: var(--accent-hover);
 }
 
 .nav-link.active i {
-  color: var(--accent);
+  color: #fff;
 }
 
 .nav-link i {
@@ -284,8 +277,8 @@ body {
   padding: 10px 14px;
   border: none;
   border-radius: 24px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -295,8 +288,17 @@ body {
 }
 
 .btn-shuffle-all:hover {
-  background: var(--accent-hover);
+  background: var(--bg-highlight);
   transform: scale(1.02);
+}
+
+.btn-shuffle-all.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-shuffle-all.active:hover {
+  background: var(--accent-hover);
 }
 
 .btn-shuffle-all:active {
@@ -1099,7 +1101,7 @@ body {
     grid-template-rows: var(--topbar-height) 1fr var(--player-height);
   }
 
-  .menu-toggle {
+  .btn-icon.menu-toggle {
     display: flex;
   }
 

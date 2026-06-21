@@ -64,6 +64,10 @@ const App = (() => {
       }
     });
 
+    // Update active state on the Shuffle All button
+    document.getElementById('shuffle-all-btn')
+      ?.classList.toggle('active', hash === '#/shuffle');
+
     // Close mobile menu on navigate
     closeMobileMenu();
   }
@@ -215,13 +219,14 @@ const App = (() => {
     currentView = 'about';
     container.innerHTML = `
       <div class="view-header">
-        <h2>About OnePlaylist</h2>
+        <h2>About</h2>
       </div>
       <div class="about-section">
         <div class="about-bio">
           <p>OnePlaylist is what happens when you turn documentation and technical concepts into songs that teach technology through clever lyrics and choruses.</p>
-          <p>Each song probably could have been a slide deck, but we think a catchy hook works better instead.</p>
+          <p>Each song probably could have been a slide deck, but we think a catchy hook works better.</p>
           <hr>
+          <br>
           <p>Follow Guy in a Cube online:</p>
           <div class="about-links">
             <a href="https://youtube.com/c/guyinacube" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
