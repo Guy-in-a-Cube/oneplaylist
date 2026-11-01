@@ -1,6 +1,6 @@
 # OnePlaylist
 
-A static music player hosted on GitHub Pages. Dark theme, album grid, full playback controls, downloads.
+A static music player hosted on GitHub Pages. Guy in a Cube light theme, album grid, full playback controls, device downloads.
 
 **Live:** https://music.guyinacube.com/
 
@@ -16,6 +16,18 @@ A static music player hosted on GitHub Pages. Dark theme, album grid, full playb
 - Media Session API (OS media controls / lock screen)
 - Auto-generates `library.json` and cover art from MP3 ID3 tags
 - GitHub Actions CI — push MP3s and the site updates
+
+## Playback and Downloads
+
+Album playback stays within the selected album. Shuffle All shows the actual playback order; selecting a song continues from its position in that list. Reshuffle keeps the current song and playback position. Switching shuffle off restores album/library order without interrupting the song.
+
+Previous restarts the current song after three seconds, otherwise it goes to the preceding song. Repeat one applies to automatic track endings; manual next/previous still skip. Repeat all wraps within the selected album or playlist. With repeat off, playback stops at the end; Play starts that queue again.
+
+Play/pause indicators stay synchronized when navigating. Volume/mute, seeking (including the start/end), keyboard controls, and supported OS media controls operate on the same player.
+
+Fresh song links focus the requested track and prompt you to press Play, respecting browser autoplay restrictions.
+
+Downloads save MP3 files or ZIP archives to your device. ZIP creation finishes before the download is started, and every requested song must be fetched successfully; a missing song fails the archive rather than producing an incomplete download. Missing optional cover art is disclosed. Repeat clicks are ignored while the same track or an archive is downloading. Your browser manages the final file save; there is no offline listening or in-app download storage.
 
 ## Adding Music
 
@@ -43,7 +55,11 @@ Push to GitHub and a workflow runs the build, commits the generated files, and d
 npm install          # first time only
 npm run build        # generates library.json + extracts covers
 npm run dev          # serves at localhost:3000
+npm test             # playback, navigation, and download regression tests
+npm run test:browser # real-browser audio, downloads, and mobile controls
 ```
+
+The browser smoke test uses installed Microsoft Edge on Windows or Google Chrome elsewhere. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to use another Chromium executable. It serves the site locally and loads the same CDN libraries as the live player.
 
 ## File Naming
 
@@ -60,6 +76,8 @@ npm run dev          # serves at localhost:3000
 | ← | Previous track |
 | S | Toggle shuffle |
 | R | Cycle repeat mode |
+
+Shortcuts do not override focused buttons, links, sliders, editable fields, or modifier-key combinations.
 
 ## GitHub Pages Limits
 

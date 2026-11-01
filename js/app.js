@@ -32,6 +32,9 @@ const App = (() => {
   // Router
   function initRouter() {
     window.addEventListener('hashchange', handleRoute);
+    document.addEventListener('playerqueuechange', () => {
+      if (currentView === 'shuffle') renderShuffle(document.getElementById('view-container'));
+    });
     handleRoute();
   }
 
@@ -70,6 +73,7 @@ const App = (() => {
 
     // Close mobile menu on navigate
     closeMobileMenu();
+    highlightActiveTrack(Player.getCurrentSong()?._id);
   }
 
   // Home view
@@ -96,28 +100,26 @@ const App = (() => {
     if (!library) return;
     currentView = 'shuffle';
 
-    // Build all tracks with album info, then shuffle
-    const allTracks = [];
+    const tracksById = new Map();
     library.albums.forEach(album => {
       album.tracks.forEach(track => {
-        allTracks.push({ track, album });
+        tracksById.set(track.id, { track, album });
       });
     });
-
-    // Fisher-Yates shuffle
-    for (let i = allTracks.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [allTracks[i], allTracks[j]] = [allTracks[j], allTracks[i]];
-    }
+    const allTracks = Player.getPlaylistTrackIds().map(id => tracksById.get(id));
+    const focused = document.activeElement;
+    const focusedTrackId = focused?.closest('.track-row')?.dataset.trackId;
+    const focusedControl = focused?.classList.contains('btn-reshuffle') ? '.btn-reshuffle'
+      : focused?.classList.contains('btn-play-shuffle') ? '.btn-play-shuffle' : null;
 
     const totalDuration = calculateTotalDuration(allTracks.map(t => t.track));
 
     const trackRows = allTracks.map((item, index) => `
       <div class="track-row shuffle-track-row" data-track-id="${item.track.id}" data-track-index="${index}">
-        <div class="track-number">
+        <button class="track-number track-play-button" aria-label="Play ${escapeHtml(item.track.title)}">
           <span class="track-number-text">${index + 1}</span>
-          <i class="fas fa-play track-play-icon"></i>
-        </div>
+          <i class="fas fa-play track-play-icon" aria-hidden="true"></i>
+        </button>
         <div class="shuffle-track-info">
           <img class="shuffle-track-art" src="${escapeHtml(item.album.cover)}" alt="${escapeHtml(item.album.title)}"
                onerror="this.src='img/default-cover.svg'">
@@ -167,23 +169,18 @@ const App = (() => {
 
     // Attach listeners
     document.querySelector('.btn-play-shuffle')?.addEventListener('click', () => {
-      const btn = document.querySelector('.btn-play-shuffle');
-      if (Player.getCurrentSong() && Player.isTrackPlaying(Player.getCurrentSong()._id)) {
-        Player.togglePlayPause();
-      } else {
-        Player.shuffleAll();
-      }
+      Player.playPlaylist();
     });
 
     document.querySelector('.btn-reshuffle')?.addEventListener('click', () => {
-      renderShuffle(container);
+      Player.reshufflePlaylist();
     });
 
     document.querySelectorAll('.shuffle-view .track-row').forEach(row => {
       row.addEventListener('click', (e) => {
         if (e.target.closest('.track-download-btn')) return;
         const trackId = row.dataset.trackId;
-        Player.playTrack(trackId);
+        Player.playPlaylist(trackId);
       });
     });
 
@@ -193,6 +190,12 @@ const App = (() => {
         Download.downloadTrack(btn.dataset.file, btn.dataset.title);
       });
     });
+    highlightActiveTrack(Player.getCurrentSong()?._id);
+    if (focusedControl) container.querySelector(focusedControl)?.focus();
+    else if (focusedTrackId) {
+      [...container.querySelectorAll('.track-row')]
+        .find(row => row.dataset.trackId === focusedTrackId)?.querySelector('.track-play-button')?.focus();
+    }
   }
 
   function calculateTotalDuration(tracks, includeSeconds = false) {
@@ -294,11 +297,18 @@ const App = (() => {
 
     attachAlbumDetailListeners(album);
 
-    // Auto-play track if deep-linked
+    // Fresh page loads need a user gesture before browsers allow audio.
     if (autoPlayTrack !== null) {
       const trackIndex = album.tracks.findIndex(t => t.trackNumber === autoPlayTrack);
       if (trackIndex !== -1) {
-        Player.playAlbum(album.slug, false, trackIndex);
+        if (navigator.userActivation && !navigator.userActivation.hasBeenActive) {
+          const row = container.querySelectorAll('.track-row')[trackIndex];
+          row?.querySelector('.track-play-button')?.focus();
+          row?.scrollIntoView?.({ block: 'nearest' });
+          showToast(`Press Play on "${album.tracks[trackIndex].title}" to start listening.`);
+        } else if (!(Player.isAlbumContext(album.slug) && Player.isTrackPlaying(album.tracks[trackIndex].id))) {
+          Player.playAlbum(album.slug, false, trackIndex);
+        }
       }
     }
   }
@@ -323,10 +333,10 @@ const App = (() => {
   function createTrackRow(track, album, index) {
     return `
       <div class="track-row" data-track-index="${index}" data-track-id="${track.id}" data-album-slug="${album.slug}">
-        <div class="track-number">
+        <button class="track-number track-play-button" aria-label="Play ${escapeHtml(track.title)}">
           <span class="track-number-text">${track.trackNumber}</span>
-          <i class="fas fa-play track-play-icon"></i>
-        </div>
+          <i class="fas fa-play track-play-icon" aria-hidden="true"></i>
+        </button>
         <div class="track-title">${escapeHtml(track.title)}</div>
         <div class="track-duration">${track.duration}</div>
         <div class="track-actions">
@@ -414,10 +424,15 @@ const App = (() => {
       const isActive = row.dataset.trackId === trackId;
       row.classList.toggle('active', isActive);
       const icon = row.querySelector('.track-play-icon');
+      const playing = isActive && Player.isTrackPlaying(trackId);
       if (icon) {
-        icon.classList.toggle('fa-pause', isActive && Player.isTrackPlaying(trackId));
-        icon.classList.toggle('fa-play', !(isActive && Player.isTrackPlaying(trackId)));
+        icon.classList.toggle('fa-pause', playing);
+        icon.classList.toggle('fa-play', !playing);
       }
+      const title = row.querySelector('.track-title')?.textContent;
+      row.querySelector('.track-play-button')?.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${title}`);
+      if (isActive) row.setAttribute('aria-current', 'true');
+      else row.removeAttribute('aria-current');
     });
 
     // Update album detail play button (green button → pause if playing)
@@ -428,6 +443,8 @@ const App = (() => {
       playAlbumBtn.innerHTML = isPlaying
         ? '<i class="fas fa-pause"></i>'
         : '<i class="fas fa-play"></i>';
+      playAlbumBtn.setAttribute('aria-label', isPlaying ? 'Pause album' : 'Play album');
+      playAlbumBtn.title = isPlaying ? 'Pause album' : 'Play album';
     }
 
     // Update album card play buttons
@@ -437,15 +454,20 @@ const App = (() => {
       btn.innerHTML = isPlaying
         ? '<i class="fas fa-pause"></i>'
         : '<i class="fas fa-play"></i>';
+      const title = btn.closest('.album-card')?.querySelector('.album-card-title')?.textContent;
+      btn.setAttribute('aria-label', `${isPlaying ? 'Pause' : 'Play'} ${title}`);
     });
 
     // Update shuffle view play button
     const shufflePlayBtn = document.querySelector('.btn-play-shuffle');
     if (shufflePlayBtn) {
-      const isPlaying = Player.getCurrentSong() && Player.isTrackPlaying(Player.getCurrentSong()._id);
+      const isPlaying = Player.isPlaylistContext() && Player.getCurrentSong() &&
+        Player.isTrackPlaying(Player.getCurrentSong()._id);
       shufflePlayBtn.innerHTML = isPlaying
         ? '<i class="fas fa-pause"></i>'
         : '<i class="fas fa-play"></i>';
+      shufflePlayBtn.title = isPlaying ? 'Pause playlist' : 'Play playlist';
+      shufflePlayBtn.setAttribute('aria-label', shufflePlayBtn.title);
     }
   }
 
@@ -458,6 +480,10 @@ const App = (() => {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  function mediaUrl(filePath) {
+    return filePath.split('/').map(encodeURIComponent).join('/');
   }
 
   // Mobile menu
@@ -489,6 +515,7 @@ const App = (() => {
     if (!toast) {
       toast = document.createElement('div');
       toast.className = 'toast';
+      toast.setAttribute('role', 'status');
       document.body.appendChild(toast);
     }
     toast.textContent = message;
@@ -585,6 +612,7 @@ const App = (() => {
     getLibrary,
     highlightActiveTrack,
     showToast,
-    escapeHtml
+    escapeHtml,
+    mediaUrl
   };
 })();

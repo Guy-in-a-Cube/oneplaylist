@@ -72,33 +72,33 @@
       <div class="player-track-info">
         <img id="player-art" class="player-art clickable" src="img/default-cover.svg" alt="Album art">
         <div class="player-text">
-          <span class="player-title" data-amplitude-song-info="name"></span>
-          <span class="player-artist" data-amplitude-song-info="artist"></span>
+          <span class="player-title"></span>
+          <span class="player-artist"></span>
         </div>
       </div>
 
       <div class="player-controls">
         <div class="player-buttons">
-          <button class="btn-icon btn-shuffle" id="btn-shuffle" title="Shuffle">
+          <button class="btn-icon btn-shuffle" id="btn-shuffle" title="Shuffle" aria-label="Shuffle" aria-pressed="false">
             <i class="fas fa-random"></i>
           </button>
-          <button class="btn-icon" id="btn-prev" title="Previous">
+          <button class="btn-icon" id="btn-prev" title="Previous" aria-label="Previous track">
             <i class="fas fa-step-backward"></i>
           </button>
-          <button class="btn-icon btn-play" id="btn-play-pause" title="Play/Pause">
+          <button class="btn-icon btn-play" id="btn-play-pause" title="Play" aria-label="Play">
             <i class="fas fa-play"></i>
             <i class="fas fa-pause"></i>
           </button>
-          <button class="btn-icon" id="btn-next" title="Next">
+          <button class="btn-icon" id="btn-next" title="Next" aria-label="Next track">
             <i class="fas fa-step-forward"></i>
           </button>
-          <button class="btn-icon btn-repeat" id="btn-repeat" title="Repeat">
+          <button class="btn-icon btn-repeat" id="btn-repeat" title="Repeat off" aria-label="Repeat off" aria-pressed="false">
             <i class="fas fa-redo"></i>
           </button>
         </div>
         <div class="player-progress">
           <span class="player-time-current"><span data-amplitude-current-minutes>0</span>:<span data-amplitude-current-seconds>00</span></span>
-          <input type="range" class="progress-bar" min="0" max="100" step="0.1" value="0">
+          <input type="range" class="progress-bar" min="0" max="100" step="0.1" value="0" aria-label="Seek">
           <span class="player-time-total"><span data-amplitude-duration-minutes>0</span>:<span data-amplitude-duration-seconds>00</span></span>
         </div>
       </div>
@@ -111,7 +111,7 @@
           <button class="btn-icon btn-volume" id="btn-volume" title="Volume">
             <i class="fas fa-volume-up"></i>
           </button>
-          <input type="range" class="volume-slider amplitude-volume-slider" min="0" max="100" value="80">
+          <input type="range" class="volume-slider" min="0" max="100" value="80" aria-label="Volume">
         </div>
       </div>
     </footer>

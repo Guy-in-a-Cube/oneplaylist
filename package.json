@@ -5,9 +5,14 @@
   "description": "Static music player for GitHub Pages",
   "scripts": {
     "build": "node scripts/build-library.js",
-    "dev": "npx serve . -l 3000"
+    "dev": "npx serve . -l 3000",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser-smoke.cjs"
   },
   "devDependencies": {
+    "jsdom": "^26.1.0",
+    "jszip": "^3.10.1",
+    "playwright-core": "^1.56.1",
     "music-metadata": "^11.12.3"
   }
 }

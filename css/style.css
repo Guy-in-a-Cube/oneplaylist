@@ -690,6 +690,13 @@ body {
   text-align: center;
 }
 
+.track-play-button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .track-row:hover .track-number-text,
 .track-row.active .track-number-text {
   display: none;
@@ -736,7 +743,8 @@ body {
   transition: opacity var(--transition), color var(--transition);
 }
 
-.track-row:hover .track-download-btn {
+.track-row:hover .track-download-btn,
+.track-row:focus-within .track-download-btn {
   opacity: 1;
 }
 
@@ -755,7 +763,8 @@ body {
   transition: opacity var(--transition), color var(--transition);
 }
 
-.track-row:hover .track-share-btn {
+.track-row:hover .track-share-btn,
+.track-row:focus-within .track-share-btn {
   opacity: 1;
 }
 
@@ -999,6 +1008,17 @@ body {
   cursor: pointer;
 }
 
+button:focus-visible,
+a:focus-visible,
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+
 /* ============================================
    Toast Notifications
    ============================================ */
@@ -1133,29 +1153,47 @@ body {
   }
 
   .player-bar {
-    grid-template-columns: 1fr auto;
-    padding: 0 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 32px 1fr;
+    padding: 4px 12px;
+  }
+
+  .player-art {
+    width: 32px;
+    height: 32px;
+  }
+
+  .player-text {
+    line-height: 1.1;
   }
 
   .player-controls {
-    flex-direction: row;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-direction: column;
   }
 
   .player-progress {
-    display: none;
+    display: flex;
   }
 
   .player-extras {
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .volume-slider {
     display: none;
   }
 
   .player-buttons {
-    gap: 8px;
+    gap: 16px;
   }
 
   .btn-shuffle,
   .btn-repeat {
-    display: none;
+    display: flex;
   }
 
   .album-detail-header {
@@ -1191,7 +1229,8 @@ body {
     padding: 8px 8px;
   }
 
-  .track-share-btn {
+  .track-share-btn,
+  .track-download-btn {
     opacity: 1;
   }
 }
